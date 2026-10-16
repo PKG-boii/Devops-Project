@@ -1,0 +1,8 @@
+# Example Terraform configuration variables
+# Copy this file to terraform.tfvars to customize your deployment.
+# IMPORTANT: Do not commit sensitive credentials to version control.
+
+aws_region   = "ap-south-1"
+cluster_name = "taskboard-eks"
+environment  = "dev"
+vpc_cidr     = "10.20.0.0/16"
