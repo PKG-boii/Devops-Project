@@ -1,0 +1,56 @@
+# Default values for taskboard Helm chart.
+namespace: taskboard
+replicaCount: 2
+
+frontend:
+  image: ghcr.io/pkg-boii/taskboard-frontend
+  tag: latest
+  service:
+    port: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+backend:
+  image: ghcr.io/pkg-boii/taskboard-backend
+  tag: latest
+  service:
+    port: 8000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+postgres:
+  host: taskboard-postgres
+  port: 5432
+  database: taskboard
+  username: taskboard
+  password: taskboard
+  persistence:
+    size: 5Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: taskboard.local
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 60
+
+monitoring:
+  serviceMonitor:
+    enabled: true
+    interval: 15s
+
+imagePullSecrets: []

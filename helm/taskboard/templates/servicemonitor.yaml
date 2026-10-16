@@ -1,0 +1,19 @@
+{{- if .Values.monitoring.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: taskboard-backend-monitor
+  namespace: {{ .Values.namespace }}
+  labels:
+    release: kube-prometheus-stack
+    app: taskboard-backend
+    {{- include "taskboard.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: taskboard-backend
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: {{ .Values.monitoring.serviceMonitor.interval | default "15s" }}
+{{- end }}
