@@ -1,0 +1,19 @@
+# Custom values for Prometheus Operator stack (kube-prometheus-stack)
+grafana:
+  enabled: true
+  adminPassword: "admin"
+  service:
+    type: ClusterIP
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    retention: 7d
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 100m
+      limits:
+        memory: 1Gi
+        cpu: 500m
