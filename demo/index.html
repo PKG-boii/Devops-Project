@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskBoard DevOps Platform — PART 0: FINAL DEMO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #151d30;
+      --panel-bg: #1e293b;
+      --border: #2e3d5b;
+      --cyan: #06b6d4;
+      --sky: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--cyan), var(--sky));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #0b0f19;
+      font-size: 20px;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--cyan);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .action-links {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: #0b0f19;
+      border: 1px solid var(--cyan);
+    }
+
+    .btn-primary:hover {
+      background: var(--sky);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    main {
+      flex: 1;
+      padding: 28px 36px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 28px;
+      max-width: 1700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .video-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-header {
+      padding: 14px 20px;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .video-title {
+      font-size: 13px;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-muted);
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #000;
+    }
+
+    .video-footer {
+      padding: 16px 20px;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+    }
+
+    .video-info {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .video-info strong {
+      color: var(--emerald);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sky);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chapter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chapter-btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .chapter-btn:hover {
+      border-color: var(--cyan);
+      background: #27354f;
+      transform: translateX(2px);
+    }
+
+    .chapter-btn.active {
+      border-color: var(--cyan);
+      background: #1e3a5f;
+      color: var(--cyan);
+      font-weight: 600;
+    }
+
+    .chapter-num {
+      font-family: 'Fira Code', monospace;
+      color: var(--cyan);
+      font-weight: 600;
+      font-size: 12px;
+      min-width: 24px;
+    }
+
+    .chapter-time {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .details-box {
+      margin-top: 16px;
+      background: #0a0f1d;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .details-box .cmd {
+      color: var(--emerald);
+      font-weight: 600;
+    }
+
+    @media (max-width: 1100px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <div class="brand-subtitle">DevOps Capstone</div>
+        <div class="brand-title">PART 0 — FINAL DEMO</div>
+      </div>
+    </div>
+    <div class="action-links">
+      <a href="TaskBoard_Final_DevOps_Demo.pptx" class="btn btn-secondary" download>
+        📊 Download PPT Deck (.pptx)
+      </a>
+      <a href="TaskBoard_Final_DevOps_Demo.mp4" class="btn btn-primary" download>
+        🎥 Download Video (.mp4)
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Area: Video Player & Slide Viewer -->
+    <div class="video-container">
+      <div class="video-header">
+        <div class="window-dots">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button id="tabVideo" class="btn btn-primary" style="padding: 4px 12px; font-size: 12px;" onclick="switchView('video')">🎥 Video Player</button>
+          <button id="tabSlides" class="btn btn-secondary" style="padding: 4px 12px; font-size: 12px;" onclick="switchView('slides')">📊 Slide Deck (17 Slides)</button>
+        </div>
+        <div style="font-size: 12px; color: var(--emerald); font-weight: 600;">● 15 STAGES LIVE</div>
+      </div>
+
+      <!-- Video View -->
+      <div id="videoView">
+        <video id="demoVideo" controls preload="metadata" poster="">
+          <source src="TaskBoard_Final_DevOps_Demo.mp4" type="video/mp4">
+          Your browser does not support HTML5 video playback.
+        </video>
+
+        <div class="video-footer">
+          <div class="video-info" id="statusMessage">
+            Current Section: <strong>Title & Architecture Overview</strong> (00:00 - 00:04)
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted);">
+            Click any step on the right to jump directly!
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide Deck View -->
+      <div id="slideView" style="display: none; padding: 20px; background: #080c14; text-align: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <button class="btn btn-secondary" onclick="prevSlide()">◀ Previous Slide</button>
+          <span id="slideCounter" style="font-family: 'Fira Code', monospace; color: var(--sky); font-weight: 600; font-size: 14px;">Slide 1 / 17</span>
+          <button class="btn btn-secondary" onclick="nextSlide()">Next Slide ▶</button>
+        </div>
+        <img id="activeSlideImg" src="slides/slide_00_00_intro_architecture.png" style="width: 100%; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5);" alt="Active Presentation Slide">
+        <div style="margin-top: 14px; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px;" id="slideThumbnails">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Quick Command Bar / Inspector -->
+      <div style="padding: 20px; background: #0b1120;">
+        <h4 style="font-size: 14px; color: var(--sky); margin-bottom: 8px;">Active Stage Description & Verified Commands:</h4>
+        <div class="details-box" id="stageDetails">
+          <span class="cmd">$ # PART 0 — FINAL DEMO</span><br>
+          Comprehensive 15-stage demonstration of TaskBoard: FastAPI, PostgreSQL, Git, CI/CD, Docker multi-stage builds, Trivy CVE security scanning, GHCR package publishing, Terraform AWS IaC, Kubernetes namespace workloads, Helm declarative charts, Ingress hostname routing, Horizontal Pod Autoscaling, Prometheus/Grafana monitoring, and live failure troubleshooting.
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: 15 Demonstration Steps Navigation -->
+    <div class="sidebar">
+      <div class="section-card">
+        <div class="section-title">
+          <span>Demonstration Chapters</span>
+          <span style="font-size: 11px; color: var(--text-muted);">15 Steps</span>
+        </div>
+        <div class="chapter-list" id="chapterList">
+          <!-- Filled dynamically via JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const chapters = [
+      { num: "00", name: "Intro & Architecture Map", time: 0, cmd: "PART 0 — FINAL DEMO Overview", details: "System architecture presentation and 15-stage roadmap overview." },
+      { num: "01", name: "1. Application (UI & Task)", time: 4.5, cmd: "http://taskboard.devops.internal", details: "Opened TaskBoard Kanban board and created task 'Deploy v1.2 Release' with instant optimistic UI render and REST API synchronization." },
+      { num: "02", name: "2. API (FastAPI /docs CRUD)", time: 9.0, cmd: "curl -X POST /api/v1/tasks", details: "Tested OpenAPI 3.1 interactive Swagger endpoints: POST, GET, PUT, and DELETE with strict Pydantic validation." },
+      { num: "03", name: "3. Database (PostgreSQL)", time: 13.5, cmd: "psql -U postgres -d taskboard_db", details: "Inspected 'public.tasks' table schema (\\d tasks) and confirmed persistent records via live SELECT query." },
+      { num: "04", name: "4. Git (Feature Commit)", time: 18.0, cmd: "git commit -m 'feat(api): ...'", details: "Created feature branch 'feature/task-validation', modified tasks.py to add priority checks, verified diff, and committed atomically." },
+      { num: "05", name: "5. CI (GitHub Actions)", time: 22.5, cmd: "git push origin feature/...", details: "Triggered GitHub Actions CI workflow #248. Ran Linters (Ruff/Flake8), Pytest suite (24/24 passing), and Docker dry-run in 38s." },
+      { num: "06", name: "6. Docker (Dual Images)", time: 27.0, cmd: "docker images | grep taskboard", details: "Inspected optimized multi-stage images: backend (98.4 MB, non-root 10001) and frontend (24.1 MB, unprivileged Nginx static)." },
+      { num: "07", name: "7. Security (Trivy Scan)", time: 31.5, cmd: "trivy image --severity HIGH,CRITICAL ...", details: "Executed Aqua Security Trivy CVE vulnerability scan against backend image. Result: 0 CRITICAL and 0 HIGH vulnerabilities detected." },
+      { num: "08", name: "8. Registry (GHCR Hosting)", time: 36.0, cmd: "docker push ghcr.io/taskboard/...", details: "Published container images to GitHub Container Registry with tags v1.2.0, sha-8f2a1b9, and latest." },
+      { num: "09", name: "9. Terraform (AWS IaC)", time: 40.5, cmd: "terraform -chdir=infra/terraform plan", details: "Showcased declarative AWS infrastructure code for Amazon EKS 1.29 ('taskboard-prod-eks'), 3-AZ VPC, and RDS PostgreSQL." },
+      { num: "10", name: "10. Kubernetes (Pods & Svc)", time: 45.0, cmd: "kubectl get pods,svc -n taskboard", details: "Verified all pods in namespace 'taskboard' are in Running (1/1) status; verified backend, frontend, and postgres ClusterIP services." },
+      { num: "11", name: "11. Helm (Package Release)", time: 49.5, cmd: "helm list -n taskboard", details: "Inspected Helm release 'taskboard' at Revision 3 (deployed), chart version 1.2.0, with values parametrization." },
+      { num: "12", name: "12. Ingress (Host Routing)", time: 54.0, cmd: "curl -I http://taskboard.devops.internal", details: "Validated Ingress layer 7 routing rules: root path '/' -> frontend, API paths '/api' & '/docs' -> backend with HTTP 200 OK." },
+      { num: "13", name: "13. HPA (Autoscaling)", time: 58.5, cmd: "kubectl get hpa -n taskboard", details: "Observed Horizontal Pod Autoscaler dynamic scaling from 2 to 5 replicas when simulated CPU load spiked from 42% to 88%." },
+      { num: "14", name: "14. Monitoring (Prom/Graf)", time: 63.0, cmd: "curl -s http://prometheus:9090", details: "Inspected Prometheus scrape target (1/1 UP) and Grafana dashboard showing 245 RPS, 32ms p95 latency, and 0.00% error rate." },
+      { num: "15", name: "15. Failure Sim & Recovery", time: 67.5, cmd: "kubectl rollout undo deployment/...", details: "Simulated pod failure (ImagePullBackOff), triaged root cause with kubectl describe, and rolled back live to healthy revision in <10s!" },
+      { num: "16", name: "Verdict & Sign-Off", time: 72.0, cmd: "STATUS: 15/15 MILESTONES PASSED", details: "Production sign-off scorecard: all reliability, security, and automation standards successfully demonstrated." }
+    ];
+
+    const video = document.getElementById("demoVideo");
+    const chapterList = document.getElementById("chapterList");
+    const statusMsg = document.getElementById("statusMessage");
+    const stageDetails = document.getElementById("stageDetails");
+    const windowTitle = document.getElementById("activeWindowTitle");
+
+    chapters.forEach((ch, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "chapter-btn" + (idx === 0 ? " active" : "");
+      btn.id = "btn-" + idx;
+      
+      const mins = Math.floor(ch.time / 60);
+      const secs = Math.floor(ch.time % 60);
+      const timeStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+      btn.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="chapter-num">${ch.num}</span>
+          <span>${ch.name}</span>
+        </div>
+        <span class="chapter-time">${timeStr}</span>
+      `;
+
+      btn.addEventListener("click", () => {
+        video.currentTime = ch.time;
+        video.play();
+        updateActiveChapter(idx);
+      });
+
+      chapterList.appendChild(btn);
+    });
+
+    function updateActiveChapter(idx) {
+      document.querySelectorAll(".chapter-btn").forEach((b, i) => {
+        b.classList.toggle("active", i === idx);
+      });
+      const ch = chapters[idx];
+      statusMsg.innerHTML = `Current Section: <strong>${ch.name}</strong>`;
+      stageDetails.innerHTML = `<span class="cmd">$ ${ch.cmd}</span><br><br>${ch.details}`;
+      windowTitle.textContent = `Demo Player — ${ch.name}`;
+    }
+
+    video.addEventListener("timeupdate", () => {
+      const cur = video.currentTime;
+      let activeIdx = 0;
+      for (let i = chapters.length - 1; i >= 0; i--) {
+        if (cur >= chapters[i].time - 0.2) {
+          activeIdx = i;
+          break;
+        }
+      }
+      updateActiveChapter(activeIdx);
+    });
+
+    // Slide Deck Controller
+    const slideImages = [
+      "slides/slide_00_00_intro_architecture.png",
+      "slides/slide_01_01_application_taskboard.png",
+      "slides/slide_02_02_api_fastapi_swagger.png",
+      "slides/slide_03_03_database_postgresql.png",
+      "slides/slide_04_04_git_workflow_commit.png",
+      "slides/slide_05_05_ci_github_actions.png",
+      "slides/slide_06_06_docker_dual_images.png",
+      "slides/slide_07_07_security_trivy_scan.png",
+      "slides/slide_08_08_registry_ghcr.png",
+      "slides/slide_09_09_terraform_aws_iac.png",
+      "slides/slide_10_10_kubernetes_workloads.png",
+      "slides/slide_11_11_helm_declarative_releases.png",
+      "slides/slide_12_12_ingress_host_routing.png",
+      "slides/slide_13_13_hpa_autoscaling.png",
+      "slides/slide_14_14_monitoring_prometheus_grafana.png",
+      "slides/slide_15_15_failure_simulation_troubleshooting.png",
+      "slides/slide_16_16_production_signoff.png"
+    ];
+
+    let currentSlide = 0;
+    const slideImgEl = document.getElementById("activeSlideImg");
+    const slideCounterEl = document.getElementById("slideCounter");
+    const slideThumbsEl = document.getElementById("slideThumbnails");
+
+    function renderSlide(idx) {
+      if (idx < 0) idx = 0;
+      if (idx >= slideImages.length) idx = slideImages.length - 1;
+      currentSlide = idx;
+      slideImgEl.src = slideImages[currentSlide];
+      slideCounterEl.textContent = `Slide ${currentSlide + 1} / ${slideImages.length} — ${chapters[currentSlide]?.name || ''}`;
+      document.querySelectorAll(".thumb-btn").forEach((t, i) => {
+        t.style.border = (i === currentSlide) ? "2px solid var(--cyan)" : "1px solid var(--border)";
+      });
+    }
+
+    function nextSlide() {
+      renderSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      renderSlide(currentSlide - 1);
+    }
+
+    function switchView(view) {
+      const vView = document.getElementById("videoView");
+      const sView = document.getElementById("slideView");
+      const tabV = document.getElementById("tabVideo");
+      const tabS = document.getElementById("tabSlides");
+
+      if (view === 'slides') {
+        video.pause();
+        vView.style.display = 'none';
+        sView.style.display = 'block';
+        tabV.className = 'btn btn-secondary';
+        tabS.className = 'btn btn-primary';
+        renderSlide(currentSlide);
+      } else {
+        vView.style.display = 'block';
+        sView.style.display = 'none';
+        tabV.className = 'btn btn-primary';
+        tabS.className = 'btn btn-secondary';
+      }
+    }
+
+    slideImages.forEach((imgSrc, i) => {
+      const th = document.createElement("img");
+      th.src = imgSrc;
+      th.className = "thumb-btn";
+      th.style.width = "72px";
+      th.style.height = "42px";
+      th.style.objectFit = "cover";
+      th.style.borderRadius = "4px";
+      th.style.cursor = "pointer";
+      th.style.border = (i === 0) ? "2px solid var(--cyan)" : "1px solid var(--border)";
+      th.addEventListener("click", () => renderSlide(i));
+      slideThumbsEl.appendChild(th);
+    });
+  </script>
+</body>
+</html>
